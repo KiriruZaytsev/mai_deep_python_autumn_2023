@@ -42,4 +42,8 @@ class TestGame(unittest.TestCase):
         self.assertRaises(ValueError, game.get_opponent_char, '1')
         self.assertEqual(game.get_opponent_char('X'), 'O')
         self.assertEqual(game.get_opponent_char('O'), 'X')
+
+    def test_start_game(self):
+        game1 = hw.TicTacGame()
+        self.assertRaises(ValueError, game1.start_game, '1')
         
