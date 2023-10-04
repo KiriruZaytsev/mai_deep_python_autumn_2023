@@ -5,6 +5,8 @@ import sys
 class TicTacGame:
     """Класс, описывающий игру в крестики-нолики"""
 
+    player_chars = {'X': 1, 'O': 2}
+
     board = [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']]
 
     def show_board(self):
@@ -84,12 +86,10 @@ class TicTacGame:
             return 'O'
         return 'X'
 
-    def minimax(self, depth, is_ai_turn, computer_char):
+    def minimax(self, field, depth, is_ai_turn, computer_char):
         """Функция, реализующая алгоритм поиска хода для компьютера"""
-        if computer_char == 'X':
-            player = 1
-        else:
-            player = 2
+        player = self.player_chars[computer_char]
+
         if self.check_winner() == player:
             return 100
         if self.check_winner() == 3-player:
@@ -103,8 +103,8 @@ class TicTacGame:
                 for x_coord in range(3):
                     if self.board[y_coord][x_coord] == '.':
                         self.board[y_coord][x_coord] = computer_char
-                        score = self.minimax(depth + 1, False, computer_char)
-                        self.board[y_coord][x_coord] = '.'
+                        score = self.minimax(field, depth + 1, False, computer_char)
+                        field[y_coord][x_coord] = '.'
                         best_score = max(best_score, score)
         else:
             best_score = sys.maxsize
@@ -112,8 +112,8 @@ class TicTacGame:
                 for x_coord in range(3):
                     if self.board[y_coord][x_coord] == '.':
                         self.board[y_coord][x_coord] = self.get_opponent_char(computer_char)
-                        score = self.minimax(depth + 1, True, computer_char)
-                        self.board[y_coord][x_coord] = '.'
+                        score = self.minimax(field, depth + 1, True, computer_char)
+                        field[y_coord][x_coord] = '.'
                         best_score = min(best_score, score)
         return best_score
 
@@ -126,7 +126,7 @@ class TicTacGame:
             for x_coord in range(3):
                 if field[y_coord][x_coord] == '.':
                     field[y_coord][x_coord] = computer_char
-                    score = self.minimax(0, False, computer_char)
+                    score = self.minimax(field, 0, False, computer_char)
                     field[y_coord][x_coord] = '.'
                     if score > best_score:
                         best_score = score
@@ -163,9 +163,9 @@ class TicTacGame:
                 result = self.check_winner()
                 self.show_board()
 
-        if result == 1:
+        if result == self.player_chars[user_char]:
             print('Вы выиграли')
-        elif result == 2:
+        elif result == self.player_chars[opponent_char]:
             print('Вы проиграли')
         else:
             print('Ничья')
@@ -195,13 +195,13 @@ class TicTacGame:
 
     def start_game(self, mode):
         """Функция, которая получает режим игры и создаёт соответствующую игру"""
-        if not isinstance(mode, str):
-            raise TypeError('Режим должен быть строкой')
-        if mode not in ['singleplayer', 'multiplayer']:
+        if not isinstance(mode, int):
+            raise TypeError('Режим должен быть числом')
+        if mode not in [1, 2]:
             raise ValueError('Режим может быть только singleplayer или multiplayer')
-        if mode == 'singleplayer':
+        if mode == 1:
             self.start_singleplayer_game()
-        elif mode == 'multiplayer':
+        elif mode == 2:
             self.start_multiplayer_game()
 
 
@@ -210,7 +210,7 @@ class TicTacGame:
 
 
 if __name__ == "__main__":
-    print('Введите режим игры (multiplayer или singleplayer)')
-    game_mode = input()
+    print('Введите режим игры (singleplayer - 1 или multiplayer - 2)')
+    game_mode = int(input())
     game = TicTacGame()
     game.start_game(game_mode)

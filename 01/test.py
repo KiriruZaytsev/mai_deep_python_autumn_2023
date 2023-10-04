@@ -6,7 +6,7 @@ class TestGame(unittest.TestCase):
     def test_validate_input(self):
         new_game = hw.TicTacGame()
         self.assertFalse(new_game.validate_input(0, 1), False)
-        self.assertTrue(new_game.validate_input(1, 1), False)
+        self.assertTrue(new_game.validate_input(1, 1), True)
         new_game.board[0][0] = 'X'
         self.assertFalse(new_game.validate_input(1, 1), False)
         new_game.board[0][1] = 'O'
@@ -31,11 +31,12 @@ class TestGame(unittest.TestCase):
         self.assertEqual(game.check_winner(), 3)
 
     def test_get_turn(self):
-        new_game = hw.TicTacGame()
-        self.assertRaises(ValueError, new_game.get_turn, 'X', -1, -1)
-        self.assertRaises(ValueError, new_game.get_turn, 'T', 1, 2)
-        new_game.board[2][2] = 'X'
-        self.assertRaises(ValueError, new_game.get_turn, 'O', 3, 3)
+        new_game1 = hw.TicTacGame()
+        self.assertRaises(ValueError, new_game1.get_turn, 'X', -1, -1)
+        self.assertRaises(ValueError, new_game1.get_turn, 'T', 1, 2)
+        new_game1.board[2][2] = 'X'
+        self.assertRaises(ValueError, new_game1.get_turn, 'O', 3, 3)
+
 
     def test_get_opponent_char(self):
         game = hw.TicTacGame()
@@ -45,5 +46,5 @@ class TestGame(unittest.TestCase):
 
     def test_start_game(self):
         game1 = hw.TicTacGame()
-        self.assertRaises(ValueError, game1.start_game, '1')
+        self.assertRaises(ValueError, game1.start_game, 3)
         
