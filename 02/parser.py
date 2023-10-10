@@ -7,18 +7,33 @@ from contextlib import contextmanager
 
 @contextmanager
 def timer():
+    '''
+    Функция-таймер
+    '''
     start_time = time()
     end_time = 0.0
     yield lambda: (end_time or time()) - start_time
     end_time = time()
 
 def mean(k):
+    '''
+    Декоратор, позволяющий вычислять среднее время
+    последних k вызовов функции
+    '''
     def inner(func):
+        '''
+        Т.к. декоратор должен принимать в качестве аргумента
+        количество вызовов, создадим новый декоратор, который
+        будет принимать функцию func
+        '''
         execution_times = deque()
         sum_k = 0.0
-        
+
         @wraps(func)
         def wrapper(*args, **kwargs):
+            '''
+            Часть, вычисляющая среднее время последних k вызовов
+            '''
             nonlocal execution_times
             nonlocal sum_k
 
@@ -39,25 +54,33 @@ def mean(k):
         return wrapper
     return inner
 
-            
+
 def callback(field, key):
+    '''
+    Функция-обработчик полученных в результате парсинга результатов.
+    Для демонстрации корректной работы декоратора, используется sleep
+    '''
     print(f'{field}, {key}')
     sleep(randint(0, 10))
 
 @mean(5)
 def parse_json(json_str: str, keyword_callback, required_fields = None, keywords = None):
-    
-    if keyword_callback == None:
+
+    '''
+    Функция, с помощью которой осуществляется парсинг строки
+    '''
+
+    if keyword_callback is None:
         raise TypeError("Функция-обработчик должна быть явно указана")
-    
+
     try:
         data = json.loads(json_str)
-    except json.JSONDecodeError as err:
+    except json.JSONDecodeError:
         raise ValueError("Введено неверное имя строки JSON")
 
-    if required_fields == None:
+    if required_fields is None:
         for field in data:
-            if keywords == None:
+            if keywords is None:
                 first_word, second_word = data[field].split()
                 keyword_callback(field, first_word)
                 keyword_callback(field, second_word)
@@ -67,7 +90,7 @@ def parse_json(json_str: str, keyword_callback, required_fields = None, keywords
                         keyword_callback(field, key)
     else:
         for field in required_fields:
-            if keywords == None:
+            if keywords is None:
                 first_word, second_word = data[field].split()
                 keyword_callback(field, first_word)
                 keyword_callback(field, second_word)
@@ -77,6 +100,9 @@ def parse_json(json_str: str, keyword_callback, required_fields = None, keywords
                         keyword_callback(field, key)
 
 def main():
+    '''
+    Пример работы программы
+    '''
     json_str = '''
     {
         "key1": "word1 word2",
@@ -87,7 +113,7 @@ def main():
     keywords = ["word1", "word3"]
     for i in range(20):
         parse_json(json_str, callback, required_field, keywords)
-        print(f"{i} mean time of 5 last executions =")
+        print(f"= {i} mean time of 5 last executions")
 
 if __name__ == "__main__":
     main()
