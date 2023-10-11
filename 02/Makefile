@@ -1,5 +1,5 @@
 run:
-	python3 parser.py
+	python3 jsonparser.py
 lint:
 	pylint parser.py
 test:
