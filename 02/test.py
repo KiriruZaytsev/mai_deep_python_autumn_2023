@@ -53,3 +53,10 @@ class TestParser(unittest.TestCase):
         jp.parse_json(self.json_str, callback_mock, ['field1'], ['value1'])
         self.assertTrue(callback_mock.called)
         self.assertEqual(callback_mock.call_count, 1)
+
+    def test_default_callback(self):
+        with jp.timer() as exec_time:
+            jp.callback('field1', 'value1')
+        curr_time = exec_time()
+        self.assertTrue(curr_time <= 2)
+        

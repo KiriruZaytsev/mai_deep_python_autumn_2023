@@ -99,21 +99,3 @@ def parse_json(json_str: str, keyword_callback, required_fields = None, keywords
                 for key in keywords:
                     if key in data[field]:
                         keyword_callback(field, key)
-
-def main():
-    '''
-    Пример работы программы
-    '''
-    json_str = '''
-    {
-        "key1": "word1 word2",
-        "key2": "word2 word3"
-    }
-    '''
-    for i in range(20):
-        parse_json(json_str, callback)
-        print(f"= {i} mean time of 5 last executions")
-    time()
-
-if __name__ == "__main__":
-    main()
