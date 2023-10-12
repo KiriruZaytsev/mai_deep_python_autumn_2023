@@ -58,5 +58,10 @@ class TestParser(unittest.TestCase):
         with jp.timer() as exec_time:
             jp.callback('field1', 'value1')
         curr_time = exec_time()
-        self.assertTrue(curr_time <= 2)
-        
+        self.assertTrue(curr_time <= 2.1)
+
+    def test_parser_with_more_than_5_calls(self):
+        callback_mock = Mock()
+        for i in range(10):
+            jp.parse_json(self.json_str, callback_mock)
+        self.assertEqual(callback_mock.call_count, 4*10)

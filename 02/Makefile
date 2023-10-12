@@ -1,7 +1,7 @@
 run:
 	python3 jsonparser.py
 lint:
-	pylint parser.py
+	pylint jsonparser.py
 test:
 	python3 -m unittest
 coverage:
