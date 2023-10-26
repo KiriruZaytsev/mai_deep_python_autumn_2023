@@ -29,5 +29,6 @@ class CustomList(list):
         return CustomList(map(lambda pair: pair[0] - pair[1], zip([*self, *[0] * added_length], [*other, *[0] * added_length])))
     
     def __rsub__(self, other):
-        return self.__sub__(other)
+        added_length = abs(len(other) - len(self))
+        return CustomList(map(lambda pair: pair[1] - pair[0], zip([*self, *[0] * added_length], [*other, *[0] * added_length])))
 

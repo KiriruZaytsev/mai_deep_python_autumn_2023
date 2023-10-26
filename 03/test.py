@@ -52,4 +52,4 @@ class TestCustomList(unittest.TestCase):
         res1 = CustomList([0, 0, 2])
         self.assertEqual(res1, self.custom_list2 - self.custom_list3)
         res2 = CustomList([0, 0, 0, 4])
-        self.assertEqual(res2, self.default_list1 - self.custom_list3)
+        self.assertEqual(res2, self.default_list2 - self.custom_list3)
